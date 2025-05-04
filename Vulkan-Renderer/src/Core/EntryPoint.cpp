@@ -1,9 +1,12 @@
-#include <iostream>
+#include "pch.h"
+#include "Utilities/Memory.h"
+#include "Core/Log.h"
+#include "Core/Assert.h"
 
 int main()
 {
-	std::cout << "Project is working!" << std::endl;
-	std::cin.get();
-
+	TRACE("Project is working!");
+	
+	ASSERT(false, "Pause");
 	return 0;
 }

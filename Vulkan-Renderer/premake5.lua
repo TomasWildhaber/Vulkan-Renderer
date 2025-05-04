@@ -6,8 +6,8 @@ project "Vulkan-Renderer"
     targetdir (outputdir .. "$(Configuration)/$(ProjectName)")
 	objdir (intoutputdir .. "$(Configuration)/$(ProjectName)")
 
-    -- pchheader "pch.h"
-	-- pchsource "src/pch.cpp"
+    pchheader "pch.h"
+	pchsource "src/pch.cpp"
 
     files
 	{
@@ -24,6 +24,8 @@ project "Vulkan-Renderer"
     {
         
     }
+
+    defines { "ENABLE_VERIFY", "ENABLE_ASSERTS" }
 
     filter "configurations:Debug"
         kind "ConsoleApp"
