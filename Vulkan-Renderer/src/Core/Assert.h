@@ -20,7 +20,7 @@
 		#define DEBUGBREAK() raise(SIGTRAP)
 	#endif
 #else
-	#error Other compilers are not support yet!
+	#error Other compilers are not supported yet!
 #endif
 
 #if defined(ENABLE_VERIFY)
