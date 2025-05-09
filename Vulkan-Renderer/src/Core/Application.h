@@ -1,4 +1,7 @@
 #pragma once
+#include "Log.h"
+#include "SmartAllocators.h"
+#include "Window.h"
 
 namespace VulkanRenderer
 {
@@ -11,12 +14,6 @@ namespace VulkanRenderer
 		char** Args;
 	};
 
-	struct WindowSize
-	{
-		int Width;
-		int Height;
-	};
-
 	struct ApplicationSpecifications
 	{
 		ApplicationSpecifications() = default;
@@ -24,25 +21,28 @@ namespace VulkanRenderer
 		const char* Title;
 		WindowSize Size;
 		CommandArgs Args;
+		LoggingLevel LogLevel = LoggingLevel::Info;
 	};
 
 	class Application
 	{
 	public:
 		Application() = delete;
-		Application(const ApplicationSpecifications& Specs);
+		Application(const ApplicationSpecifications& specs);
 
 		~Application();
 
 		inline static Application& Get() { return *s_Instance; }
 
-		inline bool IsRunning() { return isRunning; }
-		inline static bool IsApplicationThreadRunning() { return isApplicationThreadRunning; }
+		inline bool IsRunning() { return m_IsRunning; }
+		inline static bool IsApplicationThreadRunning() { return s_IsApplicationThreadRunning; }
 
 		void Run();
 	private:
-		bool isRunning = true;
-		static inline bool isApplicationThreadRunning = true;
+		ScopeRef<Window> m_Window;
+
+		bool m_IsRunning = true;
+		static inline bool s_IsApplicationThreadRunning = true;
 
 		static inline Application* s_Instance = nullptr;
 	};

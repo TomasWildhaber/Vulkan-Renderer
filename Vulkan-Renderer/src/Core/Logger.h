@@ -1,28 +1,29 @@
 #pragma once
-#ifndef DISTRIBUTION_CONFIG
 
-#include "Core/Time.h"
-
-enum class Level
+enum class LoggingLevel
 {
 	Trace = 0, Debug, Info, Warn, Error
 };
+
+#ifndef DISTRIBUTION_CONFIG
+
+#include "Core/Time.h"
 
 class Logger
 {
 	Logger() = delete;
 public:
-	static inline Level level = Level::Debug;
+	static inline LoggingLevel Level;
 
 	template<typename... Args>
 	static void Trace(const char* message, Args&&... _args)
 	{
-		if (level == Level::Trace)
+		if (Level == LoggingLevel::Trace)
 		{
 			std::vector<std::any> args = { _args... };
 
-			GetLoggerTime();
-			std::cout << "\033[94m[" << timebuffer << "] APP TRACE: ";
+			GetLogTime();
+			std::cout << "\033[94m[" << s_TimeCharBuffer << "] APP TRACE: ";
 			while (*message)
 			{
 				if (*message == '{' && *(message + 2) == '}')
@@ -45,12 +46,12 @@ public:
 	template<typename... Args>
 	static void Debug(const char* message, Args&&... _args)
 	{
-		if (level <= Level::Debug)
+		if (Level <= LoggingLevel::Debug)
 		{
 			std::vector<std::any> args = { _args... };
 
-			GetLoggerTime();
-			std::cout << "\033[35m[" << timebuffer << "] APP DEBUG: ";
+			GetLogTime();
+			std::cout << "\033[35m[" << s_TimeCharBuffer << "] APP DEBUG: ";
 			while (*message)
 			{
 				if (*message == '{' && *(message + 2) == '}')
@@ -73,12 +74,12 @@ public:
 	template<typename... Args>
 	static void Info(const char* message, Args&&... _args)
 	{
-		if (level <= Level::Info)
+		if (Level <= LoggingLevel::Info)
 		{
 			std::vector<std::any> args = { _args... };
 
-			GetLoggerTime();
-			std::cout << "\033[32m[" << timebuffer << "] APP INFO: ";
+			GetLogTime();
+			std::cout << "\033[32m[" << s_TimeCharBuffer << "] APP INFO: ";
 			while (*message)
 			{
 				if (*message == '{' && *(message + 2) == '}')
@@ -101,12 +102,12 @@ public:
 	template<typename... Args>
 	static void Warn(const char* message, Args&&... _args)
 	{
-		if (level <= Level::Warn)
+		if (Level <= LoggingLevel::Warn)
 		{
 			std::vector<std::any> args = { _args... };
 
-			GetLoggerTime();
-			std::cout << "\033[33m[" << timebuffer << "] APP WARNING: ";
+			GetLogTime();
+			std::cout << "\033[33m[" << s_TimeCharBuffer << "] APP WARNING: ";
 			while (*message)
 			{
 				if (*message == '{' && *(message + 2) == '}')
@@ -129,12 +130,12 @@ public:
 	template<typename... Args>
 	static void Error(const char* message, Args&&... _args)
 	{
-		if (level <= Level::Error)
+		if (Level <= LoggingLevel::Error)
 		{
 			std::vector<std::any> args = { _args... };
 
-			GetLoggerTime();
-			std::cout << "\033[31m[" << timebuffer << "] APP ERROR: ";
+			GetLogTime();
+			std::cout << "\033[31m[" << s_TimeCharBuffer << "] APP ERROR: ";
 			while (*message)
 			{
 				if (*message == '{' && *(message + 2) == '}')
@@ -174,20 +175,20 @@ private:
 			std::cout << any_cast<bool>(args[index]);
 		else if (args[index].type() == typeid(std::string))
 			std::cout << any_cast<std::string>(args[index]);
-		else if (args[index].type() == typeid(Game::Time))
-			std::cout << (float)any_cast<Game::Time>(args[index]);
+		else if (args[index].type() == typeid(VulkanRenderer::Time))
+			std::cout << (float)any_cast<VulkanRenderer::Time>(args[index]);
 		else
 			std::cout << "Argument at position: " << index << " not supported!" << std::endl;
 	}
 
-	static inline void GetLoggerTime()
+	static inline void GetLogTime()
 	{
 		std::time_t current_time = std::time(0);
 		std::tm* timestamp = std::localtime(&current_time);
-		strftime(timebuffer, 80, "%T", timestamp);
+		strftime(s_TimeCharBuffer, 80, "%T", timestamp);
 	}
 
-	static inline char timebuffer[80];
+	static inline char s_TimeCharBuffer[80];
 };
 
 #endif

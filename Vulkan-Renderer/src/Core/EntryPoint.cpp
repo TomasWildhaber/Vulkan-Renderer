@@ -4,9 +4,10 @@
 int Main(VulkanRenderer::CommandArgs args)
 {
 	VulkanRenderer::ApplicationSpecifications specifications;
+	specifications.Args = args;
+	specifications.LogLevel = LoggingLevel::Trace;
 	specifications.Title = "Vulkan Renderer";
 	specifications.Size = { 1280, 720 };
-	specifications.Args = args;
 
 	while (VulkanRenderer::Application::IsApplicationThreadRunning())
 	{

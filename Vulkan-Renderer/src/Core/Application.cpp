@@ -1,15 +1,20 @@
 #include "pch.h"
 #include "Application.h"
-#include "Log.h"
 #include "Assert.h"
 
 namespace VulkanRenderer
 {
-	Application::Application(const ApplicationSpecifications& Specs)
+	Application::Application(const ApplicationSpecifications& specs)
 	{
 		ASSERT(s_Instance == nullptr, "Application already initialized!");
 
 		s_Instance = this;
+
+#ifndef DISTRIBUTION_CONFIG
+		Logger::Level = specs.LogLevel;
+#endif
+
+		m_Window = Window::Create(specs.Size, specs.Title);
 	}
 
 	Application::~Application()
@@ -19,9 +24,9 @@ namespace VulkanRenderer
 
 	void Application::Run()
 	{
-		TRACE("Project is working");
+		TRACE("Application is running!");
 
-		while (isRunning)
+		while (m_IsRunning)
 		{
 
 		}

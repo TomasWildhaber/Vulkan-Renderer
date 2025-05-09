@@ -1,19 +1,19 @@
 #pragma once
 
-namespace Game
+namespace VulkanRenderer
 {
 	class Time
 	{
 	public:
 		Time() = default;
-		Time(float time) : deltaTime(time) {}
+		Time(float deltatime) : m_DeltaTime(deltatime) {}
 
-		operator float() const { return deltaTime; }
+		operator float() const { return m_DeltaTime; }
 
-		inline const float GetDeltaTime() const { return deltaTime; }
-		inline const float GetDeltaTimeMillis() const { return deltaTime * 1000; }
+		inline const float GetDeltaTime() const { return m_DeltaTime; }
+		inline const float GetDeltaTimeMillis() const { return m_DeltaTime * 1000; }
 	private:
-		float deltaTime = 0;
+		float m_DeltaTime = 0;
 	};
 
 	inline Time DeltaTime;

@@ -18,6 +18,7 @@ project "Vulkan-Renderer"
     includedirs
     {
         "src",
+        "$(SolutionDir)vendor/glm/src",
     }
 
     links
@@ -25,9 +26,10 @@ project "Vulkan-Renderer"
         
     }
 
-    defines { "ENABLE_VERIFY", "ENABLE_ASSERTS" }
+    defines { "ENABLE_VERIFY" }
 
     filter "configurations:Debug"
+        defines "ENABLE_ASSERTS"
         kind "ConsoleApp"
 
 	filter "configurations:Release"
