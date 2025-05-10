@@ -3,6 +3,8 @@
 
 #include "WindowsWindow.h"
 #include "Core/Application.h"
+#include "Core/Time.h"
+
 #include "Core/Log.h"
 #include "Core/Assert.h"
 #include "Core/Buffer.h"
