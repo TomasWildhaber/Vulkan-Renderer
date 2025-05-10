@@ -4,10 +4,25 @@
 
 namespace VulkanRenderer
 {
-	struct WindowSize
+	struct WindowSpecifications
 	{
-		int Width;
-		int Height;
+		WindowSpecifications() = default;
+
+		glm::vec2 Size = { 0, 0 };
+		glm::vec2 Position = { 200, 200 };
+		const char* Title = nullptr;
+		bool VSync = true;
+	};
+
+	struct WindowData
+	{
+		WindowData() = default;
+		WindowData(WindowSpecifications& specs) : Size(specs.Size), Position(specs.Position), Title(specs.Title), IsVSync(specs.VSync) {}
+
+		glm::vec2 Size = { 0, 0 };
+		glm::vec2 Position = { 0, 0 };
+		const char* Title = nullptr;
+		bool IsVSync;
 	};
 
 	class Window
@@ -15,29 +30,31 @@ namespace VulkanRenderer
 	public:
 		virtual ~Window() = default;
 
-		//virtual inline void OnUpdate() const = 0;
-		//virtual inline void OnRender() const = 0;
+		virtual inline void OnUpdate() const = 0;
+		virtual inline void OnRender() const = 0;
 
-		//virtual inline int GetWidth() const = 0;
-		//virtual inline int GetHeight() const = 0;
-		//virtual inline glm::vec2 GetCurrentResolution() const = 0;
-		//virtual inline glm::vec2 GetCurrentPosition() const = 0;
-		//virtual inline void* GetNativeWindow() const = 0;
+		virtual inline int GetWidth() const { return m_Data.Size.x; }
+		virtual inline int GetHeight() const { return m_Data.Size.y; }
+		virtual inline glm::vec2 GetCurrentResolution() const { return m_Data.Size; }
+		virtual inline glm::vec2 GetCurrentPosition() const { return m_Data.Position; }
+		virtual inline void* GetNativeWindow() const = 0;
 
-		//virtual inline void SetVSync(bool Enabled) = 0;
-		//virtual inline bool IsVSync() const = 0;
-		//virtual inline bool IsMaximized() const = 0;
+		virtual inline bool IsVSync() const { return m_Data.IsVSync; }
 
-		//virtual inline void MaximizeWindow() const = 0;
-		//virtual inline void RestoreWindow() const = 0;
-		//virtual inline void MinimizeWindow() const = 0;
-		//virtual inline void CloseWindow() const = 0;
+		virtual inline void SetVSync(bool Enabled) = 0;
 
-		//virtual inline void ShowWindow() const = 0;
-		//virtual inline void HideWindow() const = 0;
+		virtual inline void MaximizeWindow() const = 0;
+		virtual inline void RestoreWindow() const = 0;
+		virtual inline void MinimizeWindow() const = 0;
 
-		static ScopeRef<Window> Create(const WindowSize& size, const char* Title);
+		virtual inline void Show() const = 0;
+		virtual inline void Hide() const = 0;
+
+		static ScopeRef<Window> Create(WindowSpecifications& specs);
 	protected:
-		int m_X, m_Y, m_Width, m_Height;
+		Window(WindowSpecifications& specs)
+			: m_Data(specs) {}
+
+		WindowData m_Data;
 	};
 }

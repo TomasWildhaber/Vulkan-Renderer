@@ -10,18 +10,17 @@ namespace VulkanRenderer
 		CommandArgs() = default;
 		CommandArgs(int argc, char** argv) : Count(argc), Args(argv) {}
 
-		int Count;
-		char** Args;
+		int Count = 0;
+		char** Args = nullptr;
 	};
 
 	struct ApplicationSpecifications
 	{
 		ApplicationSpecifications() = default;
 
-		const char* Title;
-		WindowSize Size;
 		CommandArgs Args;
 		LoggingLevel LogLevel = LoggingLevel::Info;
+		WindowSpecifications WindowSpecs;
 	};
 
 	class Application
@@ -38,8 +37,12 @@ namespace VulkanRenderer
 		inline static bool IsApplicationThreadRunning() { return s_IsApplicationThreadRunning; }
 
 		void Run();
+
+		void Close();
 	private:
 		ScopeRef<Window> m_Window;
+
+		ApplicationSpecifications m_Specifications;
 
 		bool m_IsRunning = true;
 		static inline bool s_IsApplicationThreadRunning = true;

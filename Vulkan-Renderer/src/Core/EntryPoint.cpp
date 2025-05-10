@@ -3,15 +3,19 @@
 
 int Main(VulkanRenderer::CommandArgs args)
 {
-	VulkanRenderer::ApplicationSpecifications specifications;
-	specifications.Args = args;
-	specifications.LogLevel = LoggingLevel::Trace;
-	specifications.Title = "Vulkan Renderer";
-	specifications.Size = { 1280, 720 };
+	VulkanRenderer::WindowSpecifications windowSpecifications{};
+	windowSpecifications.Title = "Vulkan renderer";
+	windowSpecifications.Size = { 1280, 720 };
+	windowSpecifications.VSync = true;
+
+	VulkanRenderer::ApplicationSpecifications appSpecifications{};
+	appSpecifications.Args = args;
+	appSpecifications.LogLevel = LoggingLevel::Trace;
+	appSpecifications.WindowSpecs = windowSpecifications;
 
 	while (VulkanRenderer::Application::IsApplicationThreadRunning())
 	{
-		VulkanRenderer::Application Application(specifications);
+		VulkanRenderer::Application Application(appSpecifications);
 		Application.Run();
 	}
 
@@ -26,9 +30,12 @@ int main(int argc, char** argv)
 	return Main({ argc, argv });
 }
 #else
-int WinMain(int argc, char** argv)
+
+#include <Windows.h>
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow)
 {
-	return Main({ argc, argv });
+	return Main({ __argc, __argv }); // TODO: command line arguments for other compilers
 }
 #endif
 

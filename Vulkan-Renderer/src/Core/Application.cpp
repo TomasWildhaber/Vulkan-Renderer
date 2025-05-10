@@ -4,17 +4,19 @@
 
 namespace VulkanRenderer
 {
-	Application::Application(const ApplicationSpecifications& specs)
+	Application::Application(const ApplicationSpecifications& specs) : m_Specifications(specs)
 	{
 		ASSERT(s_Instance == nullptr, "Application already initialized!");
 
 		s_Instance = this;
 
 #ifndef DISTRIBUTION_CONFIG
-		Logger::Level = specs.LogLevel;
+		Logger::Level = m_Specifications.LogLevel;
 #endif
 
-		m_Window = Window::Create(specs.Size, specs.Title);
+		WindowSpecifications& windowSpecs = m_Specifications.WindowSpecs;
+		m_Window = Window::Create(windowSpecs);
+		m_Window->Show();
 	}
 
 	Application::~Application()
@@ -28,7 +30,14 @@ namespace VulkanRenderer
 
 		while (m_IsRunning)
 		{
-
+			m_Window->OnUpdate();
+			m_Window->OnRender();
 		}
+	}
+
+	void Application::Close()
+	{
+		m_IsRunning = false;
+		s_IsApplicationThreadRunning = false;
 	}
 }
